@@ -25,12 +25,13 @@ RECEIPTS = 'application/vnd.ga5.invoice-action-receipts+json'
 ACTIONS = {'settle_invoice','request_approval','hold_invoice','reject_duplicate','open_exception'}
 
 @contextmanager
+@contextmanager
 def db():
-    with psycopg.connect(os.environ['DATABASE_URL'], row_factory=dict_row) as conn:
-        with conn.cursor() as cur:
-            cur.execute('''CREATE TABLE IF NOT EXISTS tasks (principal text NOT NULL, id text NOT NULL, context_id text NOT NULL, batch_id text NOT NULL, payload jsonb NOT NULL, PRIMARY KEY(principal,id))''')
-            cur.execute('''CREATE TABLE IF NOT EXISTS messages (principal text NOT NULL, message_id text NOT NULL, digest text NOT NULL, task_id text NOT NULL, PRIMARY KEY(principal,message_id))''')
-            cur.execute('''CREATE TABLE IF NOT EXISTS decisions (digest text PRIMARY KEY, proposal jsonb NOT NULL)''')
+    with psycopg.connect(
+        os.environ['DATABASE_URL'],
+        row_factory=dict_row,
+        connect_timeout=8
+    ) as conn:
         yield conn
 
 def canonical(obj):
