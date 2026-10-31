@@ -25,7 +25,6 @@ RECEIPTS = 'application/vnd.ga5.invoice-action-receipts+json'
 ACTIONS = {'settle_invoice','request_approval','hold_invoice','reject_duplicate','open_exception'}
 
 @contextmanager
-@contextmanager
 def db():
     with psycopg.connect(
         os.environ['DATABASE_URL'],
